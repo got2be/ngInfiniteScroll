@@ -15,6 +15,7 @@ angular.module(MODULE_NAME, [])
       infiniteScrollDisabled: '=',
       infiniteScrollUseDocumentBottom: '=',
       infiniteScrollListenForEvent: '@',
+      infiniteScrollFlexReverse: '=',
     },
 
     link(scope, elem, attrs) {
@@ -62,17 +63,19 @@ angular.module(MODULE_NAME, [])
       // called in order to throttle the function call.
       function defaultHandler() {
         let containerBottom;
+        let elementTop;
         let elementBottom;
+        let containerTopOffset = 0;
         if (container === windowElement) {
           containerBottom = height(container) + pageYOffset(container[0].document.documentElement);
           elementBottom = offsetTop(elem) + height(elem);
         } else {
           containerBottom = height(container);
-          let containerTopOffset = 0;
           if (offsetTop(container) !== undefined) {
             containerTopOffset = offsetTop(container);
           }
-          elementBottom = (offsetTop(elem) - containerTopOffset) + height(elem);
+          elementTop = offsetTop(elem);
+          elementBottom = (elementTop - containerTopOffset) + height(elem);
         }
 
         if (useDocumentBottom) {
@@ -80,7 +83,13 @@ angular.module(MODULE_NAME, [])
         }
 
         const remaining = elementBottom - containerBottom;
-        const shouldScroll = remaining <= (height(container) * scrollDistance) + 1;
+
+        let shouldScroll;
+        if (scope.infiniteScrollFlexReverse) {
+          shouldScroll = elementTop >= containerTopOffset;
+        } else {
+          shouldScroll = remaining <= (height(container) * scrollDistance) + 1;
+        }
 
         if (shouldScroll) {
           checkWhenEnabled = true;
