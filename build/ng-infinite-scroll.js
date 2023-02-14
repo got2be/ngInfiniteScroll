@@ -1,4 +1,4 @@
-/* ng-infinite-scroll - v1.3.0 - 2021-07-07 */
+/* ng-infinite-scroll - v1.3.0 - 2023-02-14 */
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
     define(['module', 'exports', 'angular'], factory);
@@ -274,7 +274,7 @@
 
         // infinite-scroll-parent establishes this element's parent as the
         // container infinitely scrolled instead of the whole window.
-        if (attrs.infiniteScrollParent != null) {
+        if (attrs.infiniteScrollParent) {
           changeContainer(_angular2['default'].element(elem.parent()));
         }
 
